@@ -1,10 +1,11 @@
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 
-const token = import.meta.env.VITE_SPOTIFY_TOKEN;
+const token = sessionStorage.getItem('accessToken');
 
 async function fetchWebApi(endpoint: string, method: string, body?: string): Promise<any> {
   const res = await fetch(`https://api.spotify.com/${endpoint}`, {
     headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Bearer ${token}`,
     },
     method,
@@ -26,12 +27,6 @@ export async function getUserSavedAlbum(): Promise<any> {
   )).items;
 }
 
-const topTracks = await getTopTracks();
-console.log(topTracks);
-
-const userSavedAlbums = await getUserSavedAlbum();
-console.log(userSavedAlbums);
-
 type AlbumImage = {
   height: number
   width: number
@@ -47,6 +42,10 @@ type UserSavedAlbum = {
   added_at: string
   album: Album
 }
+
+const topTracks = await getTopTracks();
+
+const userSavedAlbums = await getUserSavedAlbum();
 
 export default function UserSavedAlbums() {
   return (
