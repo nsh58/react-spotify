@@ -1,3 +1,5 @@
+import {format} from 'date-fns'
+
 const token = import.meta.env.VITE_SPOTIFY_TOKEN;
 
 async function fetchWebApi(endpoint: string, method: string, body?: string): Promise<any> {
@@ -30,10 +32,26 @@ console.log(topTracks);
 const userSavedAlbums = await getUserSavedAlbum();
 console.log(userSavedAlbums);
 
+type AlbumImage = {
+  height: number
+  width: number
+  url: string
+}
+
+type Album = {
+  images: Array<AlbumImage> 
+  name: string
+}
+
+type UserSavedAlbum = {
+  added_at: string
+  album: Album
+}
+
 export default function UserSavedAlbums() {
   return (
     <div>
-      {userSavedAlbums.map((userSavedAlbum: any) => {
+      {userSavedAlbums.map((userSavedAlbum: UserSavedAlbum) => {
         return (
           <div className="ui card">
             <div className="image">
@@ -42,7 +60,7 @@ export default function UserSavedAlbums() {
             <div className="content">
               <a className="header">Kristy</a>
               <div className="meta">
-                <span className="date">{userSavedAlbum.added_at}</span>
+                <span className="date">ライクした日{format(new Date(userSavedAlbum.added_at), 'yyyy/M/d')}</span>
               </div>
               <div className="description">
                 Kristy is an art director living in New York.
